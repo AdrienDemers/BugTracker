@@ -337,6 +337,8 @@ firebase.auth().onAuthStateChanged((user) => {
         document.getElementById("show-bugs").innerHTML = "";
         document.getElementById("login-form").style.height = "344px";
         document.getElementById("add-bug-form").style.visibility = "hidden";
+
+        document.getElementById("main-message").innerHTML = "" ;
     }
 });
 
