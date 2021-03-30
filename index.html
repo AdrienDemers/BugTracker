@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BugTracker</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Load Firebase-->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <!--<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script> -->
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <body>
+      <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+
+      <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+      <!--<script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-analytics.js"></script> -->
+
+      <!-- Add Firebase products that you want to use -->
+      <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-auth.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-firestore.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-database.js"></script>
+    </body>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAGydIrbuMQfDCTp7OF-ihRAZX_FfD5-SE",
+        authDomain: "bugtracker-43328.firebaseapp.com",
+        databaseURL: "https://bugtracker-43328-default-rtdb.firebaseio.com",
+        projectId: "bugtracker-43328",
+        storageBucket: "bugtracker-43328.appspot.com",
+        messagingSenderId: "1072556556964",
+        appId: "1:1072556556964:web:b6304e8652ae19a2915c31",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="nav-wrapper">
+        <div class="left-side">
+          <a href="index.html">BugTracker</a>
+        </div>
+
+        <div class="sign-out">
+          <button type="button" id="sign-out-button">Sign out</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-message"></div>
+
+    <div id="editBugModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="closeBtn">&times;</span>
+          <h2>Edit Bug</h2>
+        </div>
+        <!-- Edit bug Form -->
+        <div class="edit-bug-form">
+          <h2>edit this bug:</h2>
+
+          <div id="edit-msg"></div>
+
+          <form>
+            <input type="hidden" id="bug-id" />
+            <div class="form-group">
+              <label for="new-bug-title">Bug Title</label>
+              <input
+                type="text"
+                id="new-bug-title"
+                placeholder="New Bug Title"
+              />
+            </div>
+            <div class="form-group">
+              <label for="new-bug-description">New Bug Description</label>
+              <textarea
+                class="form-control"
+                id="new-bug-description"
+                cols="3"
+                rows="8"
+                placeholder="New Bug Description"
+              ></textarea>
+            </div>
+
+            <div class="checkbox">
+              <label for="is-resolved">
+                <input id="is-resolved" type="checkbox" />Is Resolved
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="bug-date">Date Added: </label>
+              <p id="bug-date" name="bug-date">no date data</p>
+            </div>
+
+            <button type="button" class="btn" id="update-bug-btn">
+              Update Bug
+            </button>
+          </form>
+        </div>
+        <!-- End of Edit Bug form -->
+      </div>
+    </div>
+    <!-- End of Edit Bug modal -->
+
+    <div id="CreateAccountModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="closeBtn" id="createAccountModalCloseBtn">&times;</span>
+        </div>
+        <!-- Create Account Form -->
+        <div class="create-account-form">
+          <h2>Create an Account</h2>
+          <div id="create-account-msg"></div>
+          <form>
+            <div class="form-group">
+              <label for="createAccountEmailInput">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="createAccountEmailInput"
+                placeholder="Email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="createAccountPasswordInput">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="createAccountPasswordInput"
+                placeholder="Password"
+              />
+            </div>
+
+            <input
+              type="radio"
+              id="programmer"
+              name="type"
+              value="programmer"
+            />
+            <label for="programmer">Programmer</label><br />
+            <input type="radio" id="manager" name="type" value="manager" />
+            <label for="manager">Project Manager</label><br />
+
+            <button type="button" class="btn" id="create-account-button">
+              Create Account
+            </button>
+          </form>
+        </div>
+        <!-- End of Create Account Bug form -->
+      </div>
+    </div>
+    <!-- End of Create Account Bug modal -->
+
+    <!-- Login Form -->
+    <div class="login-form" id="login-form">
+      <h3>Sign in</h3>
+
+      <form>
+        <div class="form-group">
+          <label for="emailInput">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="emailInput"
+            placeholder="Email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="passwordInput"
+            placeholder="Password"
+          />
+        </div>
+
+        <button type="button" class="btn" id="sign-in-button">Sign in</button>
+        <button type="button" class="btn" id="create-account-modal-button">
+          Create Account
+        </button>
+        <button
+          type="google-login-button"
+          class="btn"
+          id="sign-in-google-button"
+        >
+          Sign in with Google not done
+        </button>
+      </form>
+    </div>
+    <!-- End of Login Form -->
+
+    <!-- Add Bug Form-->
+    <div class="add-bug-form" id="add-bug-form">
+      <h2>Add a bug</h2>
+
+      <div class="msg"></div>
+
+      <form>
+        <div class="form-group">
+          <label for="bug-title">Bug Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="bug-title"
+            placeholder="Bug Title"
+          />
+        </div>
+        <div class="form-group">
+          <label for="bug-description">Bug Description</label>
+          <textarea
+            class="form-control"
+            id="bug-description"
+            rows="4"
+            col="150"
+            placeholder="Bug Description"
+          ></textarea>
+        </div>
+
+        <button type="button" class="btn" id="save-bug-btn">Save</button>
+      </form>
+    </div>
+    <!-- End of Add bug Form -->
+
+    <div class="show-bugs" id="show-bugs">
+      <h4>Login to see database</h4>
+    </div>
+
+    <!-- Script -->
+    <script src="main.js"></script>
+  </body>
+</html>

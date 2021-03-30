@@ -1,0 +1,258 @@
+/* * {
+  color: aliceblue;
+} */
+
+button {
+  padding: 0.7em 1.2em;
+  color: black;
+  font-size: 1.1em;
+  border-radius: 15px;
+  border: 3px;
+  border-color: black;
+  border-style: double;
+}
+
+button:hover {
+  background: #313131;
+  color: #fff;
+  cursor: pointer;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(32, 38, 65);
+  color: aliceblue;
+}
+
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Nav Styles */
+.nav-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.left-side {
+  display: flex;
+}
+.left-side > a {
+  color: #2c2c2c;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 3em;
+  color: aliceblue;
+}
+
+/* End of Nav Styles */
+
+#main-message {
+  display: block;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: auto;
+  margin-left: auto;
+  width: 60%;
+  line-height: 0.4em;
+  margin-bottom: 50px;
+}
+
+/* Login Styles */
+.login-form {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+  width: 60%;
+}
+.login-form > h3 {
+  display: block;
+}
+
+.form-group {
+  display: block;
+  white-space: pre-line;
+}
+.form-group > input {
+  margin-top: 18px;
+  color: #2c2c2c;
+}
+.form-group > textarea {
+  margin-top: 18px;
+  color: #2c2c2c;
+}
+form > button {
+  margin-top: 15px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+} /* End of Login Styles */
+
+/* Add bug Form Styles */
+.add-bug-form {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+  margin-bottom: 80px;
+}
+
+#bug-title {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px;
+  margin-top: 18px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+label {
+  margin-left: 10px;
+  margin-bottom: 1118px;
+  border-bottom: 10px;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+.error {
+  background: orangered;
+  color: #fff;
+  width: 50%;
+  padding: 5px;
+  margin: 5px;
+}
+/* End of Add Bug Form Styles */
+
+/* Show Bugs Styles */
+.show-bugs {
+  width: 70%;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 400px;
+}
+.show-bugs > div > ul > li {
+  margin-top: 10px;
+}
+
+.delete-bug {
+  background-color: rgb(255, 91, 91);
+  margin: 10px;
+  margin-left: 20px;
+  font-size: 0.9em;
+  font-weight: 600;
+  border-style: double;
+  border-width: 5px;
+  border-color: black;
+}
+
+.edit-bug {
+  background-color: #2d9dff;
+  margin: 10px;
+  font-size: 0.9em;
+  font-weight: 600;
+  border-color: black;
+  border-width: 6px;
+  border-style: double;
+}
+.mark-fixed-bug {
+  background-color: #2dff6c;
+  margin: 10px;
+  font-size: 0.9em;
+  font-weight: 600;
+  border-color: black;
+  border-width: 6px;
+  border-style: double;
+}
+/* End Show Bugs Styles */
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #2c2c2c;
+}
+
+.modal-content {
+  color: #ffffff;
+  background-color: #1f1f1f;
+  margin: 50px auto;
+  padding: 20px;
+  width: 60%;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.3), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+  animation-name: modalopen;
+  animation-duration: 0.4s;
+}
+
+.closeBtn {
+  color: rgb(88, 88, 88);
+  float: right;
+  font-size: 30px;
+}
+
+.closeBtn:hover,
+.closeBtn:focus {
+  color: rgb(211, 211, 211);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@keyframes modalopen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.edit-bug-form {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  margin-bottom: 0px;
+}
+
+#new-bug-title {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px;
+  margin-top: 18px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+/* End of Modal Styles */
