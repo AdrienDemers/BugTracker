@@ -32,13 +32,16 @@ textarea {
 .nav-wrapper {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-top: 25px;
+  margin-left: 18px;
+  margin-right: 18px;
 }
 
 .left-side {
   display: flex;
+}
+.left-side > img {
+  margin: auto;
 }
 .left-side > a {
   color: #2c2c2c;
@@ -46,6 +49,7 @@ textarea {
   font-weight: 600;
   font-size: 3em;
   color: aliceblue;
+  margin-left: 10px;
 }
 
 /* End of Nav Styles */
