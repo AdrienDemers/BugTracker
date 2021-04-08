@@ -264,4 +264,36 @@ textarea {
   border-radius: 8px;
   box-sizing: border-box;
 }
+
+.create-account-modal-content {
+  color: #ffffff;
+  background-color: #1f1f1f;
+  margin: 50px auto;
+  padding: 20px;
+  width: 30%;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.3), 0 7px 20px 0 rgba(0, 0, 0, 0.2);
+  animation-name: modalopen;
+  animation-duration: 0.4s;
+}
+
+.create-account-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.account-type-choice {
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+.account-type-choice > input {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.account-type {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
 /* End of Modal Styles */
