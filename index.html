@@ -54,6 +54,7 @@
 
     <div id="main-message"></div>
 
+    <!-- Edit Bug Modal -->
     <div id="editBugModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
@@ -108,16 +109,17 @@
     </div>
     <!-- End of Edit Bug modal -->
 
+    <!-- Create Account Modal -->
     <div id="CreateAccountModal" class="modal">
-      <div class="modal-content">
+      <div class="create-account-modal-content">
         <div class="modal-header">
           <span class="closeBtn" id="createAccountModalCloseBtn">&times;</span>
         </div>
         <!-- Create Account Form -->
         <div class="create-account-form">
-          <h2>Create an Account</h2>
           <div id="create-account-msg"></div>
           <form>
+            <h2>Create an Account</h2>
             <div class="form-group">
               <label for="createAccountEmailInput">Email address</label>
               <input
@@ -137,15 +139,21 @@
               />
             </div>
 
-            <input
-              type="radio"
-              id="programmer"
-              name="type"
-              value="programmer"
-            />
-            <label for="programmer">Programmer</label><br />
-            <input type="radio" id="manager" name="type" value="manager" />
-            <label for="manager">Project Manager</label><br />
+            <div class="account-type">
+              <label>Account Type</label>
+
+              <div class="account-type-choice">
+                <input
+                  type="radio"
+                  id="programmer"
+                  name="type"
+                  value="programmer"
+                />
+                <label for="programmer">Programmer</label><br />
+                <input type="radio" id="manager" name="type" value="manager" />
+                <label for="manager">Project Manager</label><br />
+              </div>
+            </div>
 
             <button type="button" class="btn" id="create-account-button">
               Create Account
