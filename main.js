@@ -15,6 +15,7 @@ const bugTime = document.querySelector("#bug-time");
 const addBugMsg = document.querySelector('.msg');
 const editBugMsg = document.getElementById('edit-msg');
 
+
 var currentUser = {};
 var loginDiv = document.getElementsByClassName("login-form");
 var signOutDivs = document.getElementsByClassName("sign-out");
@@ -48,6 +49,12 @@ closeBtn.addEventListener('click', (e) => {
 createAccountModalCloseBtn.addEventListener('click', (e) => {
     createAccountModal.style.display = 'none';
 })
+
+passwordInput.addEventListener("keyup", (e) => {
+    if (e.keyCode === 13) {
+        document.getElementById("sign-in-button").click();
+    }
+});
 
 document.getElementById("create-account-modal-button").addEventListener("click", (e) => {
     e.preventDefault();
