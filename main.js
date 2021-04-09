@@ -72,7 +72,6 @@ document.getElementById("create-account-button").addEventListener("click", (e) =
 })
 document.getElementById("sign-in-button").addEventListener("click", (e) => {
     e.preventDefault();
-    console.log("test");
     var email = emailInput.value;
     var password = passwordInput.value;
     signIn(email, password);
@@ -133,7 +132,7 @@ document.getElementById("update-bug-btn").addEventListener("click", (e) => {
 
     if (bug.title != "") {
         addBugToDatabase(bug);
-        modal.style.display = 'none';
+        editBugMmodal.style.display = 'none';
     } else {
         console.log("check");
         editBugMsg.classList.add('error');
@@ -204,6 +203,9 @@ function deleteBug(b) {
     firebase.database().ref("users/" + currentUser.uid + "/bugs/" + bugID).remove();
 }
 function editBug(b) {
+    console.log(b);
+
+
     editBugModal.style.display = 'block';
     
     var bugID = b.getAttribute("bug-data-id");
@@ -229,7 +231,9 @@ function editBug(b) {
 
 function markResolvedBug(b) {
     var bugID = b.getAttribute("bug-data-id");
-    console.log(bugID);
+    console.log("Mark resolved for this ID :  " + bugID);
+    console.log("this b :  ");
+    console.log(b);
 
     firebase.database().ref("bugs/" + bugID + "/resolved").set(true);
     firebase.database().ref("users/" + currentUser.uid + "/bugs/" + bugID + "/resolved").set(true);
@@ -239,66 +243,88 @@ function markResolvedBug(b) {
 function loadBugs(currentUser) {
     if (currentUser.email != null) {
         var bugReference = firebase.database().ref().child("bugs");
+        console.log("this is a bugReference");
         console.log(bugReference);
         //console.log(bugReference.path.pieceNum_);
         var bugHTMLitem = "<h3>No unresolved bugs are logged.</h3>";
 
+
+            // old 
+            // bugReference.on("value", function (snapshot) {
+            //     document.getElementById("show-bugs").innerHTML = "";
+            //     bugHTMLitem = "<h3>Here are the bugs logged in the database.</h3>";
+
+            //     console.log("this is a snapshot" );
+            //     console.log( snapshot );
+
+            //     snapshot.forEach(function (childsnapshot) {
+            //         var bug = childsnapshot.val();
+            //         if (!bug.resolved && bug.owner === currentUser.uid) {
+            //             bugHTMLitem += "<div class='bugHTMLitem'><ul>";
+            //             bugHTMLitem += "<li>Title: <span class='bug-data-title'>" + bug.title + "</span></li>";
+            //             if (bug.description != "") {
+            //                 bugHTMLitem += "<li>Description: <span class='bug-data-desc'>" + bug.description + "</span></li>";
+            //             }
+                        
+            //             bugHTMLitem += "<li>Is Resolved: <span class='bug-data-resolved'>" + bug.resolved + "</span></li>";
+            //             bugHTMLitem += "<li>Date Added: <span class='bug-data-date'>" + bug.dateAdded + "</span></li>";
+            //             bugHTMLitem += "<li>ID of owner: <span class='bug-data-date'>" + bug.owner + "</span></li>";
+            //             bugHTMLitem += "</ul>";
+            //             bugHTMLitem += "<button onclick='deleteBug(this)' type='button' class='btn delete-bug' id='" + bug.id + "'>Delete Bug</button>";
+            //             bugHTMLitem += "<button onclick='editBug(this)' type='button' class='btn edit-bug' bug-data-id='"+bug.id+"' bug-data-title='"+bug.title+"' bug-data-desc='"+bug.description+"' bug-data-resolved='"+bug.resolved+"' bug-data-date='" + bug.dateAdded + "'>Edit Bug</button>";
+            //             if (!bug.resolved) {
+            //                 bugHTMLitem += "<button onclick='markResolvedBug(this)' type='button' class='btn mark-fixed-bug' bug-data-id='" + bug.id + "'>Mark Bug as Resolved</button>";
+            //             }
+            //             bugHTMLitem += "</div>";
+            //             bugHTMLitem += "<hr>";
+            //         }
+            //     });
+
+            //     document.getElementById("show-bugs").innerHTML = bugHTMLitem;
+            // })
+
+
+            // new
             bugReference.on("value", function (snapshot) {
                 document.getElementById("show-bugs").innerHTML = "";
                 bugHTMLitem = "<h3>Here are the bugs logged in the database.</h3>";
-                bugHTMLitem += "<hr>";
 
-                console.log( snapshot );
+                bugHTMLitem += "<table class='content-table'>";
+                bugHTMLitem += "<thead> <tr> <th>Name</th> <th>Description</th> <th>Date Added</th> <th>ID of owner</th> <th>Resolved</th> <th>Actions</th> </tr> </thead> ";
+                bugHTMLitem += "<tbody>";
+
+
 
                 snapshot.forEach(function (childsnapshot) {
                     var bug = childsnapshot.val();
-                    if (!bug.resolved && bug.owner === currentUser.uid) {
-                        bugHTMLitem += "<div class='bugHTMLitem'><ul>";
-                        bugHTMLitem += "<li>Title: <span class='bug-data-title'>" + bug.title + "</span></li>";
-                        if (bug.description != "") {
-                            bugHTMLitem += "<li>Description: <span class='bug-data-desc'>" + bug.description + "</span></li>";
+                    // (!bug.resolved && bug.owner === currentUser.uid)
+                    if (bug.owner === currentUser.uid) {
+                        bugHTMLitem += "<tr>";
+                        bugHTMLitem += "<td class='bug-data-title'>" + bug.title + "</td>";
+                        bugHTMLitem += "<td class='bug-data-desc'>" + bug.description + "</td>";
+                        bugHTMLitem += "<td class='bug-data-date'>" + bug.dateAdded + "</td>";
+                        bugHTMLitem += "<td>" + bug.owner + "</td>";
+                        bugHTMLitem += "<td class='bug-data-resolved'>" + bug.resolved + "</td>";
+
+                        bugHTMLitem += "<td> <button onclick=deleteBug(this) type='button' ";
+                        bugHTMLitem += "class= ";
+                        bugHTMLitem += "'btn delete-bug' ";
+                        bugHTMLitem += "id='" + bug.id + "'>Delete</bclass=>";
+
+
+
+
+                        bugHTMLitem += "<button onclick=editBug(this) type='button' class='btn edit-bug' bug-data-id='" + bug.id + "' bug-data-title='"+bug.title+"' bug-data-desc='"+bug.description+"' bug-data-resolved='" + bug.resolved+"' bug-data-date='" + bug.dateAdded + "'>Edit</button>";
+
+                        if (!bug.resolved) {
+                             bugHTMLitem += "<button onclick='markResolvedBug(this)' type='button' class='btn mark-fixed-bug' bug-data-id='" + bug.id + "'>Mark as Resolved</button>";
                         }
                         
-                        bugHTMLitem += "<li>Is Resolved: <span class='bug-data-resolved'>" + bug.resolved + "</span></li>";
-                        bugHTMLitem += "<li>Date Added: <span class='bug-data-date'>" + bug.dateAdded + "</span></li>";
-                        bugHTMLitem += "<li>ID of owner: <span class='bug-data-date'>" + bug.owner + "</span></li>";
-                        bugHTMLitem += "</ul>";
-                        bugHTMLitem += "<button onclick='deleteBug(this)' type='button' class='btn delete-bug' id='" + bug.id + "'>Delete Bug</button>";
-                        bugHTMLitem += "<button onclick='editBug(this)' type='button' class='btn edit-bug' bug-data-id='"+bug.id+"' bug-data-title='"+bug.title+"' bug-data-desc='"+bug.description+"' bug-data-resolved='"+bug.resolved+"' bug-data-date='" + bug.dateAdded + "'>Edit Bug</button>";
-                        if (!bug.resolved) {
-                            bugHTMLitem += "<button onclick='markResolvedBug(this)' type='button' class='btn mark-fixed-bug' bug-data-id='" + bug.id + "'>Mark Bug as Resolved</button>";
-                        }
+                        bugHTMLitem += "</td>";
                         bugHTMLitem += "</div>";
-                        bugHTMLitem += "<hr>";
                     }
                 });
-                // RESOLVED BUGS
-                bugHTMLitem += "<hr>";
-                bugHTMLitem += "<h3>Resolved Bugs:</h3>";
-                bugHTMLitem += "<hr>";
-                snapshot.forEach(function (childsnapshot) {
-                    var bug = childsnapshot.val();
-                    if (bug.resolved && bug.owner === currentUser.uid) {
-                        
-                        bugHTMLitem += "<div class='bugHTMLitem'><ul>";
-                        bugHTMLitem += "<li>Title: <span class='bug-data-title'>" + bug.title + "</span></li>";
-                        if (bug.description != "") {
-                            bugHTMLitem += "<li>Description: <span class='bug-data-desc'>" + bug.description + "</span></li>";
-                        }
-                        bugHTMLitem += "<li>Is Resolved: <span class='bug-data-resolved'>" + bug.resolved + "</span></li>";
-                        bugHTMLitem += "<li>Date Added: <span class='bug-data-date'>" + bug.dateAdded + "</span></li>";
-                        bugHTMLitem += "<li>ID of owner: <span class='bug-data-date'>" + bug.owner + "</span></li>"; 
-                        bugHTMLitem += "</ul>";
-                        bugHTMLitem += "<button onclick='deleteBug(this)' type='button' class='btn delete-bug' id='" + bug.id + "'>Delete Bug</button>";
-                        bugHTMLitem += "<button onclick='editBug(this)' type='button' class='btn edit-bug' bug-data-id='"+bug.id+"' bug-data-title='"+bug.title+"' bug-data-desc='"+bug.description+"' bug-data-resolved='"+bug.resolved+"' bug-data-date='" + bug.dateAdded + "'>Edit Bug</button>";
-                        if (!bug.resolved) {
-                            bugHTMLitem += "<button onclick='markResolvedBug(this)' type='button' class='btn mark-fixed-bug' bug-data-id='" + bug.id + "'>Mark Bug as Resolved</button>";
-                        }
-                        bugHTMLitem += "</div>";
-                        bugHTMLitem += "<hr>";
-                    }
-                    
-                });
+                
                 document.getElementById("show-bugs").innerHTML = bugHTMLitem;
             })
 
@@ -322,7 +348,6 @@ firebase.auth().onAuthStateChanged((user) => {
         writeUserData(user);
         
         console.log(currentUser.email + " has logged in.")
-        console.log(currentUser.email);
         console.log("user's type is :  " + currentUser.type);
         //document.getElementById('typeRadio').innerHTML = currentUser.type;
 
@@ -350,7 +375,6 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 
 function writeUserData(user) {
-    console.log(user.type);
     if (user.type === undefined) {
         if (rdProgrammer.checked === true) {
             user.type = "Programmer";
