@@ -1,6 +1,11 @@
-/* * {
-  color: aliceblue;
-} */
+* {
+  padding: 0;
+  margin: 0;
+}
+
+p {
+  margin: 16px 0;
+}
 
 button {
   padding: 0.7em 1.2em;
@@ -155,7 +160,7 @@ textarea {
 
 /* Show Bugs Styles */
 .show-bugs {
-  width: 70%;
+  width: 88%;
   justify-content: center;
   align-items: center;
   margin-left: auto;
@@ -168,35 +173,67 @@ textarea {
 
 .delete-bug {
   background-color: rgb(255, 91, 91);
-  margin: 10px;
-  margin-left: 20px;
-  font-size: 0.9em;
+  margin: 0px 6px;
+  font-size: 0.8em;
   font-weight: 600;
-  border-style: double;
-  border-width: 5px;
+  border-style: solid;
+  border-width: 3px;
   border-color: black;
 }
 
 .edit-bug {
-  background-color: #2d9dff;
-  margin: 10px;
-  font-size: 0.9em;
-  font-weight: 600;
+  background-color: #3ea5ff;
+  margin: 0px 6px;
+  font-size: 0.8em;
+  font-weight: bold;
   border-color: black;
-  border-width: 6px;
-  border-style: double;
+  border-width: 3px;
+  border-style: solid;
 }
 .mark-fixed-bug {
-  background-color: #2dff6c;
-  margin: 10px;
-  font-size: 0.9em;
-  font-weight: 600;
-  border-color: black;
-  border-width: 6px;
-  border-style: double;
+  background-color: #43ff7b;
+  color: rgb(0, 0, 0);
+  margin: 0px 6px;
+  font-size: 0.8em;
+  font-weight: bold;
+  border-color: rgb(0, 0, 0);
+  border-width: 3px;
+  border-style: solid;
 }
+
 /* End Show Bugs Styles */
 
+.content-table {
+  border-collapse: collapse;
+  border-radius: 5px 5px 0 0;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 500px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.content-table thead tr {
+  background-color: #006d98;
+  color: #ffffff;
+}
+
+.content-table th,
+.content-table td {
+  padding: 12px 50px;
+}
+
+.content-table tbody tr {
+  border-bottom: 1px solid #005475;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+  background-color: #006d9862;
+}
+
+.content-table tbody tr:last-of-type {
+  border-bottom: 3px solid #005475;
+}
 /* Modal Styles */
 .modal {
   display: none;
