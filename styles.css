@@ -252,6 +252,17 @@ form > button {
   color: #2c2c2c;
 }
 
+.modal-header {
+  margin-top: 10px;
+  margin-left: 30px;
+  margin-bottom: 40px;
+}
+
+.modal-header > h2 {
+  padding-top: 15px;
+  padding-left: 10px;
+}
+
 .modal-content {
   color: #ffffff;
   background-color: #1f1f1f;
