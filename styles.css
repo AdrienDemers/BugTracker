@@ -14,7 +14,7 @@ button {
   border-radius: 15px;
   border: 3px;
   border-color: black;
-  border-style: double;
+  border-style: groove;
 }
 
 button:hover {
@@ -25,12 +25,30 @@ button:hover {
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: rgb(32, 38, 65);
+  background-color: rgb(21, 29, 46);
   color: aliceblue;
 }
 
 textarea {
   font-family: Arial, Helvetica, sans-serif;
+}
+
+label {
+  margin-left: 10px;
+  margin-bottom: 1118px;
+  border-bottom: 10px;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-top: 10px;
 }
 
 /* Nav Styles */
@@ -131,24 +149,6 @@ form > button {
   box-sizing: border-box;
 }
 
-label {
-  margin-left: 10px;
-  margin-bottom: 1118px;
-  border-bottom: 10px;
-}
-
-textarea {
-  resize: none;
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
 .error {
   background: orangered;
   color: #fff;
@@ -166,9 +166,6 @@ textarea {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 400px;
-}
-.show-bugs > div > ul > li {
-  margin-top: 10px;
 }
 
 .delete-bug {
@@ -205,12 +202,14 @@ textarea {
 
 .content-table {
   border-collapse: collapse;
-  border-radius: 5px 5px 0 0;
-  margin: 25px 0;
+  border-radius: 8px;
+  margin: 20px 2px 20px 2px;
+  /* top right bottom left */
+  width: 100%;
   font-size: 0.9em;
-  min-width: 500px;
+  min-width: 460px;
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 2px 2px 36px rgba(0, 0, 0, 0.2);
 }
 
 .content-table thead tr {
@@ -220,20 +219,25 @@ textarea {
 
 .content-table th,
 .content-table td {
-  padding: 12px 50px;
+  padding: 12px 3vw;
+  text-align: center;
 }
 
 .content-table tbody tr {
   border-bottom: 1px solid #005475;
 }
 
+.content-table tbody tr {
+  background-color: #00314462;
+}
 .content-table tbody tr:nth-of-type(even) {
-  background-color: #006d9862;
+  background-color: #005e8362;
 }
 
 .content-table tbody tr:last-of-type {
   border-bottom: 3px solid #005475;
 }
+
 /* Modal Styles */
 .modal {
   display: none;
