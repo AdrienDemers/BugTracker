@@ -1,10 +1,13 @@
 var database = firebase.database();
 
+
+// Create Account Inputs
 const emailInput = document.querySelector('#emailInput');
 const passwordInput = document.querySelector('#passwordInput');
 const createAccountEmailInput = document.querySelector('#createAccountEmailInput');
 const createAccountPasswordInput = document.querySelector('#createAccountPasswordInput');
 
+// Create Bug Inputs
 const bugTitleInput = document.querySelector('#bug-title');
 const bugDescriptionInput = document.querySelector('#bug-description');
 const newBugTitleInput = document.querySelector('#new-bug-title');
@@ -12,8 +15,11 @@ const newBugDescriptionInput = document.querySelector('#new-bug-description');
 const bugDate = document.querySelector("#bug-date");
 const bugTime = document.querySelector("#bug-time");
 
+
+// Msg
 const addBugMsg = document.querySelector('.msg');
 const editBugMsg = document.getElementById('edit-msg');
+const mainMsg = document.getElementById('main-message');
 
 
 var currentUser = {};
@@ -30,9 +36,7 @@ var createAccountModal = document.getElementById('CreateAccountModal');
 var createAccountModalCloseBtn = document.getElementsByClassName('closeBtn')[1];
 var rdProgrammer = document.getElementById('programmer');
 var rdManager = document.getElementById('manager');
-//var createAccountModalCloseBtn = document.getElementById('createAccountModalCloseBtn');
 
-//document.getElementById("show-bugs").innerHTML = "";
 
 
 // Listeners
@@ -101,7 +105,7 @@ document.getElementById("save-bug-btn").addEventListener("click", (e) => {
         title: bugTitleInput.value,
         description: bugDescriptionInput.value,
         time: Date.now(),
-        dateAdded: d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + ((d.getMinutes()<10?'0':'') + d.getMinutes()),
+        dateAdded: getCurrentDate(),
         resolved: false
     }
 
@@ -193,9 +197,9 @@ function signOut() {
     })
 }
 function addBugToDatabase(b) {
-    var database = firebase.database();
-    firebase.database().ref("bugs/" + b.id).set(b);
-    firebase.database().ref("users/" + currentUser.uid + "/bugs/" + b.id).set(b);
+    var database = firebase.database()
+    firebase.database().ref("bugs/" + b.id).set(b)
+    firebase.database().ref("users/" + currentUser.uid + "/bugs/" + b.id).set(b)
 }
 function deleteBug(b) {
     var bugID = b.getAttribute("id");
@@ -228,7 +232,6 @@ function editBug(b) {
     firebase.database().ref("users/" + currentUser.uid + "/bugs/" + bugID).remove();
     */
 }
-
 function markResolvedBug(b) {
     var bugID = b.getAttribute("bug-data-id");
     console.log("Mark resolved for this ID :  " + bugID);
@@ -240,6 +243,27 @@ function markResolvedBug(b) {
 }
 
 
+function createNewProject() {
+    var database = firebase.database()
+
+    newProjectName = document.getElementById("new-project-name").value
+    console.log("createNewProject fct called")
+    console.log("name: " + newProjectName)
+
+
+
+    firebase.database().ref("users/" + currentUser.uid + "/projects/" + newProjectName).set(newProjectName)
+
+
+}
+
+function getCurrentDate() {
+    var d = new Date();
+    return (d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + ((d.getMinutes()<10?'0':'') + d.getMinutes()))
+}
+
+
+
 function loadBugs(currentUser) {
     if (currentUser.email != null) {
         var bugReference = firebase.database().ref().child("bugs");
@@ -249,49 +273,15 @@ function loadBugs(currentUser) {
         var bugHTMLitem = "<h3>No unresolved bugs are logged.</h3>";
 
 
-            // old 
-            // bugReference.on("value", function (snapshot) {
-            //     document.getElementById("show-bugs").innerHTML = "";
-            //     bugHTMLitem = "<h3>Here are the bugs logged in the database.</h3>";
-
-            //     console.log("this is a snapshot" );
-            //     console.log( snapshot );
-
-            //     snapshot.forEach(function (childsnapshot) {
-            //         var bug = childsnapshot.val();
-            //         if (!bug.resolved && bug.owner === currentUser.uid) {
-            //             bugHTMLitem += "<div class='bugHTMLitem'><ul>";
-            //             bugHTMLitem += "<li>Title: <span class='bug-data-title'>" + bug.title + "</span></li>";
-            //             if (bug.description != "") {
-            //                 bugHTMLitem += "<li>Description: <span class='bug-data-desc'>" + bug.description + "</span></li>";
-            //             }
-                        
-            //             bugHTMLitem += "<li>Is Resolved: <span class='bug-data-resolved'>" + bug.resolved + "</span></li>";
-            //             bugHTMLitem += "<li>Date Added: <span class='bug-data-date'>" + bug.dateAdded + "</span></li>";
-            //             bugHTMLitem += "<li>ID of owner: <span class='bug-data-date'>" + bug.owner + "</span></li>";
-            //             bugHTMLitem += "</ul>";
-            //             bugHTMLitem += "<button onclick='deleteBug(this)' type='button' class='btn delete-bug' id='" + bug.id + "'>Delete Bug</button>";
-            //             bugHTMLitem += "<button onclick='editBug(this)' type='button' class='btn edit-bug' bug-data-id='"+bug.id+"' bug-data-title='"+bug.title+"' bug-data-desc='"+bug.description+"' bug-data-resolved='"+bug.resolved+"' bug-data-date='" + bug.dateAdded + "'>Edit Bug</button>";
-            //             if (!bug.resolved) {
-            //                 bugHTMLitem += "<button onclick='markResolvedBug(this)' type='button' class='btn mark-fixed-bug' bug-data-id='" + bug.id + "'>Mark Bug as Resolved</button>";
-            //             }
-            //             bugHTMLitem += "</div>";
-            //             bugHTMLitem += "<hr>";
-            //         }
-            //     });
-
-            //     document.getElementById("show-bugs").innerHTML = bugHTMLitem;
-            // })
-
-
-            // new
             bugReference.on("value", function (snapshot) {
                 document.getElementById("show-bugs").innerHTML = "";
                 bugHTMLitem = "<h3>Here are the bugs logged in the database.</h3>";
 
                 bugHTMLitem += "<table class='content-table'>";
-                bugHTMLitem += "<thead> <tr> <th>Name</th> <th>Description</th> <th>Date Added</th> <th>ID of owner</th> <th>Resolved</th> <th>Actions</th> </tr> </thead> ";
+                bugHTMLitem += "<thead> <tr> <th>Name</th> <th>Description</th> <th>Date Added</th>  <th>Resolved</th> <th>Actions</th> </tr> </thead> ";
                 bugHTMLitem += "<tbody>";
+
+                // <th>ID of owner</th>
 
 
 
@@ -300,12 +290,13 @@ function loadBugs(currentUser) {
                     // (!bug.resolved && bug.owner === currentUser.uid)
                     if (bug.owner === currentUser.uid) {
                         bugHTMLitem += "<tr>";
-                        bugHTMLitem += "<td class='bug-data-title'>" + bug.title + "</td>";
+                        bugHTMLitem += "<td class='bug-data-title'>" + bug.title.replace("'", '*') + "</td>";
                         bugHTMLitem += "<td class='bug-data-desc'>" + bug.description + "</td>";
                         bugHTMLitem += "<td class='bug-data-date'>" + bug.dateAdded + "</td>";
-                        bugHTMLitem += "<td>" + bug.owner + "</td>";
+                        // bugHTMLitem += "<td>" + bug.owner + "</td>";
                         bugHTMLitem += "<td class='bug-data-resolved'>" + bug.resolved + "</td>";
 
+                        // bug: ' causes issue when in bug title
                         bugHTMLitem += "<td> <button onclick=deleteBug(this) type='button' ";
                         bugHTMLitem += "class= ";
                         bugHTMLitem += "'btn delete-bug' ";
@@ -317,13 +308,15 @@ function loadBugs(currentUser) {
                         bugHTMLitem += "<button onclick=editBug(this) type='button' class='btn edit-bug' bug-data-id='" + bug.id + "' bug-data-title='"+bug.title+"' bug-data-desc='"+bug.description+"' bug-data-resolved='" + bug.resolved+"' bug-data-date='" + bug.dateAdded + "'>Edit</button>";
 
                         if (!bug.resolved) {
-                             bugHTMLitem += "<button onclick='markResolvedBug(this)' type='button' class='btn mark-fixed-bug' bug-data-id='" + bug.id + "'>Mark as Resolved</button>";
+                             bugHTMLitem += "<button onclick=markResolvedBug(this) type='button' class='btn mark-fixed-bug' bug-data-id='" + bug.id + "'>Mark as Resolved</button>";
                         }
                         
                         bugHTMLitem += "</td>";
-                        bugHTMLitem += "</div>";
+                        // bugHTMLitem += "</div>";
                     }
                 });
+                bugHTMLitem += "</tbody>";
+                bugHTMLitem += "</table>";
                 
                 document.getElementById("show-bugs").innerHTML = bugHTMLitem;
             })
@@ -341,17 +334,29 @@ firebase.auth().onAuthStateChanged((user) => {
         var uid = user.uid;
         var email = user.email;
         currentUser = user;
-
-        console.log( "value radio programmer: " + rdProgrammer.checked);
-        console.log( "value radio manager: " + rdManager.checked);
         
         writeUserData(user);
         
         console.log(currentUser.email + " has logged in.")
         console.log("user's type is :  " + currentUser.type);
-        //document.getElementById('typeRadio').innerHTML = currentUser.type;
 
-        document.getElementById("main-message").innerHTML = "<p>Signed in as: " + currentUser.email + "</p> <br> <p>Account type: " + currentUser.type + "</p>" ;
+
+        mainMsg.innerHTML = "<p>This is under development!</p>" ;
+        mainMsg.innerHTML += "<p>Signed in as: " + currentUser.email + "</p> <br> <p>Account type: " + currentUser.type + "</p>" ;
+
+        mainMsg.innerHTML += "<br></br> <p for='projects'>Select Project:</p>"
+        mainMsg.innerHTML += "<select name='projects' id='projects'>"
+        mainMsg.innerHTML += "<option value='test' </option>"
+
+        mainMsg.innerHTML += "</select>"
+
+
+        mainMsg.innerHTML += "<br></br> <label for=''>Create new Project: </label>"
+        mainMsg.innerHTML += "<input type='text' id='new-project-name' placeholder='New Project Name'></input>"
+        mainMsg.innerHTML += "<br></br>"
+        mainMsg.innerHTML += "<button onclick=createNewProject()> Create New Project </button>"
+
+
         for (var i = 0; i < loginDiv.length; i++) {
             loginDiv[i].style.visibility = "hidden";
         }
@@ -383,10 +388,10 @@ function writeUserData(user) {
         }
     }
     console.log(user.type);
-    firebase.database().ref('users/' + user.uid).set({
-        email: user.email,
-        type: user.type
-    });
+    // firebase.database().ref('users/' + user.uid).set({
+    //     email: user.email,
+    //     type: user.type
+    // });
 
 }
 
