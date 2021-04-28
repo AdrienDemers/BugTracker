@@ -20,6 +20,7 @@ const bugTime = document.querySelector("#bug-time");
 const addBugMsg = document.querySelector('.msg');
 const editBugMsg = document.getElementById('edit-msg');
 const mainMsg = document.getElementById('main-message');
+const projectMsg = document.getElementById('project-message');
 
 
 var currentUser = {};
@@ -49,7 +50,6 @@ window.addEventListener('click', (e) => {
 closeBtn.addEventListener('click', (e) => {
     editBugMmodal.style.display = 'none';
 })
-
 createAccountModalCloseBtn.addEventListener('click', (e) => {
     createAccountModal.style.display = 'none';
 })
@@ -251,15 +251,7 @@ function createNewProject() {
     console.log("name: " + newProjectName)
 
 
-
     firebase.database().ref("users/" + currentUser.uid + "/projects/" + newProjectName).set(newProjectName)
-
-
-}
-
-function getCurrentDate() {
-    var d = new Date();
-    return (d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + ((d.getMinutes()<10?'0':'') + d.getMinutes()))
 }
 
 
@@ -340,44 +332,43 @@ firebase.auth().onAuthStateChanged((user) => {
         console.log(currentUser.email + " has logged in.")
         console.log("user's type is :  " + currentUser.type);
 
+        var mainMsgString = ""
+        var projectMsgString = ""
 
-        mainMsg.innerHTML = "<p>This is under development!</p>" ;
+
+        mainMsg.innerHTML = "<p>This is under development !</p>" ;
+
+        mainMsg.innerHTML += "<br>" ;
+        mainMsg.innerHTML += "<br>" ;
+
         mainMsg.innerHTML += "<p>Signed in as: " + currentUser.email + "</p> <br> <p>Account type: " + currentUser.type + "</p>" ;
-
-        mainMsg.innerHTML += "<br></br> <p for='projects'>Select Project:</p>"
-        mainMsg.innerHTML += "<select name='projects' id='projects'>"
-        mainMsg.innerHTML += "<option value='test' </option>"
-
-        mainMsg.innerHTML += "</select>"
+        mainMsg.innerHTML += "<br> <p>Account type: " + currentUser.type + "</p>" ;
 
 
-        mainMsg.innerHTML += "<br></br> <label for=''>Create new Project: </label>"
-        mainMsg.innerHTML += "<input type='text' id='new-project-name' placeholder='New Project Name'></input>"
-        mainMsg.innerHTML += "<br></br>"
-        mainMsg.innerHTML += "<button onclick=createNewProject()> Create New Project </button>"
+        
+        mainMsg.innerHTML = mainMsgString
+        
+        
+        projectMsg.innerHTML == "<br></br> <label for=''>Create new Project: </label>"
+        projectMsg.innerHTML += "<input type='text' id='new-project-name' placeholder='New Project Name'></input>"
+        projectMsg.innerHTML += "<br></br>"
+        projectMsg.innerHTML += "<button onclick=createNewProject()> Create New Project </button>"
+        projectMsg.innerHTML += "<br></br> <label for='cars'>Select Project: </label>"
+        projectMsg.innerHTML += "<select name='cars' id='cars'> <option value='test'>Test</option> </select>"
+        projectMsg.innerHTML += "<option value='test'>Test</option>"
+        projectMsg.innerHTML += "</select>"
 
 
-        for (var i = 0; i < loginDiv.length; i++) {
-            loginDiv[i].style.visibility = "hidden";
-        }
-        document.getElementById("login-form").style.height = 0;
-        document.getElementById("sign-out-button").style.visibility = "visible";
+        hideLoginForm();
         loadBugs(currentUser);
-
-        document.getElementById("add-bug-form").style.visibility = "visible";
-
-        //document.getElementById("show-bugs").innerHTML = "<h3>There are no logged bugs yet.";
 
     } else {
         // User is signed out
-        document.getElementById("sign-out-button").style.visibility = "hidden";
-        document.getElementById("show-bugs").innerHTML = "";
-        document.getElementById("login-form").style.height = "344px";
-        document.getElementById("add-bug-form").style.visibility = "hidden";
-
-        document.getElementById("main-message").innerHTML = "" ;
+        switchToLoggedOutStyle()
     }
 });
+
+
 
 function writeUserData(user) {
     if (user.type === undefined) {
@@ -393,6 +384,31 @@ function writeUserData(user) {
     //     type: user.type
     // });
 
+}
+
+
+
+
+function switchToLoggedOutStyle() {
+    document.getElementById("sign-out-button").style.visibility = "hidden";
+    document.getElementById("show-bugs").innerHTML = "";
+    document.getElementById("login-form").style.height = "344px";
+    document.getElementById("add-bug-form").style.visibility = "hidden";
+    document.getElementById("main-message").innerHTML = "" ;
+}
+
+function hideLoginForm() {
+    for (var i = 0; i < loginDiv.length; i++) {
+        loginDiv[i].style.visibility = "hidden";
+    }
+    document.getElementById("login-form").style.height = 0;
+    document.getElementById("sign-out-button").style.visibility = "visible";
+    document.getElementById("add-bug-form").style.visibility = "visible";
+}
+
+function getCurrentDate() {
+    var d = new Date();
+    return (d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + ((d.getMinutes()<10?'0':'') + d.getMinutes()))
 }
 
 
