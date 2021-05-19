@@ -1,6 +1,5 @@
 var database = firebase.database();
 
-
 // Create Account Inputs
 const emailInput = document.querySelector('#emailInput');
 const passwordInput = document.querySelector('#passwordInput');
@@ -23,10 +22,10 @@ const mainMsg = document.getElementById('main-message');
 const projectMsg = document.getElementById('project-message');
 
 
-var currentUser = {};
+var currentUser = {}
+var currentProject = ""
 var loginDiv = document.getElementsByClassName("login-form");
 var signOutDivs = document.getElementsByClassName("sign-out");
-
 var showBugs = document.querySelector('.show-bugs');
 
 // Get modal element
@@ -104,15 +103,17 @@ document.getElementById("save-bug-btn").addEventListener("click", (e) => {
         owner: currentUser.uid,
         title: bugTitleInput.value,
         description: bugDescriptionInput.value,
-        time: Date.now(),
+        // time: Date.now(),
         dateAdded: getCurrentDate(),
-        resolved: false
+        resolved: false,
+        project: currentProject
     }
+
+    console.log(`New bug parent project is: ${currentProject}`)
 
     if (bug.title != "") {
         addBugToDatabase(bug);
     } else {
-        console.log("check");
         if (!addBugMsg.classList.contains('error') ) {
             addBugMsg.classList.add('error');
         }
@@ -209,15 +210,13 @@ function deleteBug(b) {
 function editBug(b) {
     console.log(b);
 
-
     editBugModal.style.display = 'block';
     
     var bugID = b.getAttribute("bug-data-id");
     console.log(bugID);
-    //console.log(b);
 
     document.getElementById("bug-id").value = bugID;
-    document.getElementById("edit-msg").innerHTML = "<p id='modal-mes'>" + bugID + "</p>";
+    document.getElementById("edit-msg").innerHTML = `<p id='modal-mes'>"${bugID}"</p>`;
     document.getElementById("new-bug-title").value = b.getAttribute("bug-data-title");
     document.getElementById("new-bug-description").value = b.getAttribute("bug-data-desc");
     document.getElementById("bug-date").innerText = b.getAttribute("bug-data-date");
@@ -234,24 +233,79 @@ function editBug(b) {
 }
 function markResolvedBug(b) {
     var bugID = b.getAttribute("bug-data-id");
-    console.log("Mark resolved for this ID :  " + bugID);
-    console.log("this b :  ");
-    console.log(b);
+    console.log(`Mark resolved for this ID : ${bugID}`);
+    console.log(`this b : ${b} `);
 
     firebase.database().ref("bugs/" + bugID + "/resolved").set(true);
     firebase.database().ref("users/" + currentUser.uid + "/bugs/" + bugID + "/resolved").set(true);
 }
 
-
 function createNewProject() {
-    var database = firebase.database()
+    // var database = firebase.database()
 
     newProjectName = document.getElementById("new-project-name").value
     console.log("createNewProject fct called")
-    console.log("name: " + newProjectName)
 
+    var d = new Date();
 
-    firebase.database().ref("users/" + currentUser.uid + "/projects/" + newProjectName).set(newProjectName)
+    var project = {
+        id: newProjectName + Date.now(), //Date.now() returns nbr of millisecs since jan 1 1970
+        owner: currentUser.uid,
+        name: newProjectName,
+        // time: Date.now(),
+        dateAdded: getCurrentDate()
+    }
+
+    if(project.name != "") {
+        firebase.database().ref("projects/" + project.id).set(project)
+        firebase.database().ref("users/" + currentUser.uid + "/projects/" + newProjectName).set(project)
+        currentProject = newProjectName
+        console.log(`Current Project is : ${currentProject}`)
+        updateProjectDiv()
+    }
+
+}
+
+// Project list does not show up initially, not sure why
+function updateProjectList() {
+        updateProjectDiv()
+}
+
+function updateProjectDiv() {
+    var projectMsgString = `<br> <p>Current Project: ${currentProject} </p>` ;
+        
+        projectMsgString += "<br></br> <label for=''>Create new Project: </label>"
+        projectMsgString += "<input type='text' id='new-project-name' placeholder='New Project Name'></input>"
+        projectMsgString += "<br></br>"
+        projectMsgString += "<button onclick=createNewProject()>Create New Project</button>"
+        projectMsgString += "<button onclick=updateProjectList()>Update Project List</button>"
+        projectMsgString += "<br></br> <p>Select project: </p>"
+
+        var projectReference = firebase.database().ref().child("projects")
+
+        projectReference.on("value", function (snapshot) {
+            snapshot.forEach(function (childsnapshot) {
+
+                var project = childsnapshot.val()
+                if(project.owner === currentUser.uid) {
+                    if(project.name != currentProject) {
+                        projectMsgString += `<button onclick=selectProject(this)>${project.name}</button>`
+                    } else {
+                        projectMsgString += `<button onclick=selectProject(this) class='selected-btn'>${project.name}</button>`
+                    }
+                }
+            })
+            console.log('project html item set with string')
+            projectMsg.innerHTML = projectMsgString
+        })
+}
+
+function selectProject(project) {
+    console.log(`selected project: ${project.innerHTML}`)
+    currentProject = project.innerHTML
+    updateProjectDiv()
+    console.log(`current user: ${currentUser}`)
+    loadBugs(currentUser)
 }
 
 
@@ -259,43 +313,36 @@ function createNewProject() {
 function loadBugs(currentUser) {
     if (currentUser.email != null) {
         var bugReference = firebase.database().ref().child("bugs");
-        console.log("this is a bugReference");
-        console.log(bugReference);
+        console.log(`this is a bugReference: ${bugReference}`);
         //console.log(bugReference.path.pieceNum_);
         var bugHTMLitem = "<h3>No unresolved bugs are logged.</h3>";
-
 
             bugReference.on("value", function (snapshot) {
                 document.getElementById("show-bugs").innerHTML = "";
                 bugHTMLitem = "<h3>Here are the bugs logged in the database.</h3>";
 
                 bugHTMLitem += "<table class='content-table'>";
-                bugHTMLitem += "<thead> <tr> <th>Name</th> <th>Description</th> <th>Date Added</th>  <th>Resolved</th> <th>Actions</th> </tr> </thead> ";
-                bugHTMLitem += "<tbody>";
-
-                // <th>ID of owner</th>
-
-
+                bugHTMLitem += "<thead> <tr> <th>Name</th> <th>Description</th> <th>Date Added</th>  <th>Resolved</th> <th>Parent Project</th> <th>Actions</th> </tr> </thead> ";
+                bugHTMLitem += "<tbody>"; // <th>ID of owner</th>
 
                 snapshot.forEach(function (childsnapshot) {
                     var bug = childsnapshot.val();
                     // (!bug.resolved && bug.owner === currentUser.uid)
-                    if (bug.owner === currentUser.uid) {
+                    if (bug.owner === currentUser.uid && bug.project === currentProject) {
+                        console.log(`Current project: ${currentProject}`)
                         bugHTMLitem += "<tr>";
-                        bugHTMLitem += "<td class='bug-data-title'>" + bug.title.replace("'", '*') + "</td>";
-                        bugHTMLitem += "<td class='bug-data-desc'>" + bug.description + "</td>";
-                        bugHTMLitem += "<td class='bug-data-date'>" + bug.dateAdded + "</td>";
+                        bugHTMLitem += `<td class='bug-data-title'>${bug.title.replace("'", '*')}</td>`;
+                        bugHTMLitem += `<td class='bug-data-desc'>${bug.description}</td>`;
+                        bugHTMLitem += `<td class='bug-data-date'>${bug.dateAdded}</td>`;
                         // bugHTMLitem += "<td>" + bug.owner + "</td>";
-                        bugHTMLitem += "<td class='bug-data-resolved'>" + bug.resolved + "</td>";
+                        bugHTMLitem += `<td class='bug-data-resolved'>${bug.resolved}</td>`;
+                        bugHTMLitem += `<td class='bug-data-project'>${bug.project}</td>`;
 
-                        // bug: ' causes issue when in bug title
+                        // issue : ' causes bug when in bug title
                         bugHTMLitem += "<td> <button onclick=deleteBug(this) type='button' ";
                         bugHTMLitem += "class= ";
                         bugHTMLitem += "'btn delete-bug' ";
                         bugHTMLitem += "id='" + bug.id + "'>Delete</bclass=>";
-
-
-
 
                         bugHTMLitem += "<button onclick=editBug(this) type='button' class='btn edit-bug' bug-data-id='" + bug.id + "' bug-data-title='"+bug.title+"' bug-data-desc='"+bug.description+"' bug-data-resolved='" + bug.resolved+"' bug-data-date='" + bug.dateAdded + "'>Edit</button>";
 
@@ -309,10 +356,8 @@ function loadBugs(currentUser) {
                 });
                 bugHTMLitem += "</tbody>";
                 bugHTMLitem += "</table>";
-                
                 document.getElementById("show-bugs").innerHTML = bugHTMLitem;
             })
-
 
 
     }
@@ -321,7 +366,7 @@ function loadBugs(currentUser) {
 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-        // User is signed in, see docs for a list of available properties
+        // User is signed in, list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         var uid = user.uid;
         var email = user.email;
@@ -331,35 +376,18 @@ firebase.auth().onAuthStateChanged((user) => {
         
         console.log(currentUser.email + " has logged in.")
         console.log("user's type is :  " + currentUser.type);
-
-        var mainMsgString = ""
-        var projectMsgString = ""
-
-
-        mainMsg.innerHTML = "<p>This is under development !</p>" ;
-
-        mainMsg.innerHTML += "<br>" ;
-        mainMsg.innerHTML += "<br>" ;
-
-        mainMsg.innerHTML += "<p>Signed in as: " + currentUser.email + "</p> <br> <p>Account type: " + currentUser.type + "</p>" ;
-        mainMsg.innerHTML += "<br> <p>Account type: " + currentUser.type + "</p>" ;
-
-
         
+        var mainMsgString = "<p>This is under development !</p>" ;
+        mainMsgString += "<br>" ;
+        mainMsgString += "<br>" ;
+        mainMsgString += "<p>Signed in as: " + currentUser.email + "</p> <br> <p>Account type: " + currentUser.type + "</p>" ;
+
         mainMsg.innerHTML = mainMsgString
         
         
-        projectMsg.innerHTML == "<br></br> <label for=''>Create new Project: </label>"
-        projectMsg.innerHTML += "<input type='text' id='new-project-name' placeholder='New Project Name'></input>"
-        projectMsg.innerHTML += "<br></br>"
-        projectMsg.innerHTML += "<button onclick=createNewProject()> Create New Project </button>"
-        projectMsg.innerHTML += "<br></br> <label for='cars'>Select Project: </label>"
-        projectMsg.innerHTML += "<select name='cars' id='cars'> <option value='test'>Test</option> </select>"
-        projectMsg.innerHTML += "<option value='test'>Test</option>"
-        projectMsg.innerHTML += "</select>"
-
-
         hideLoginForm();
+        
+        updateProjectDiv();
         loadBugs(currentUser);
 
     } else {
@@ -385,6 +413,9 @@ function writeUserData(user) {
     // });
 
 }
+
+
+
 
 
 
